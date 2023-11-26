@@ -1,0 +1,85 @@
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ServiceCenters (
+    ServiceCenterID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Rating FLOAT DEFAULT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Appointments (
+    AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    ServiceCenterID INT,
+    AppointmentTime DATETIME NOT NULL,
+    Status ENUM('Booked', 'Completed', 'Cancelled') NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID)
+);
+
+CREATE TABLE Bills (
+    BillID INT AUTO_INCREMENT PRIMARY KEY,
+    AppointmentID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    Paid ENUM('Yes', 'No') DEFAULT 'No',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
+);
+
+
+
+DELIMITER //
+CREATE PROCEDURE CreateCustomer(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
+BEGIN
+    IF EXISTS (SELECT * FROM Customers WHERE Username = p_username) THEN
+        SELECT 'Account already created for this username';
+    ELSE
+        INSERT INTO Customers(Username, Password) VALUES(p_username, p_password);
+        SELECT 'Account created successfully for this username';
+    END IF;
+END //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE CreateServiceCenter(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
+BEGIN
+    IF EXISTS (SELECT * FROM ServiceCenters WHERE Username = p_username) THEN
+        SELECT 'Account already created for this username';
+    ELSE
+        INSERT INTO ServiceCenters(Username, Password) VALUES(p_username, p_password);
+        SELECT 'Account created successfully for this username';
+    END IF;
+END //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE BookAppointment(IN p_customerID INT, IN p_serviceCenterID INT, IN p_appointmentTime DATETIME)
+BEGIN
+    INSERT INTO Appointments(CustomerID, ServiceCenterID, AppointmentTime, Status) VALUES(p_customerID, p_serviceCenterID, p_appointmentTime, 'Booked');
+    SELECT 'Appointment booked successfully';
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE CompleteAppointment(IN p_appointmentID INT, IN p_amount DECIMAL(10, 2))
+BEGIN
+    UPDATE Appointments SET Status = 'Completed' WHERE AppointmentID = p_appointmentID;
+    INSERT INTO Bills(AppointmentID, Amount) VALUES(p_appointmentID, p_amount);
+    SELECT 'Appointment completed and bill generated successfully';
+END //
+DELIMITER ;
+
+
+
