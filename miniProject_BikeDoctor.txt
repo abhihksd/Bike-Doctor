@@ -34,6 +34,16 @@ CREATE TABLE Bills (
 );
 
 
+CREATE TABLE BIKE (
+  bikeID int NOT NULL AUTO_INCREMENT,
+  model varchar(45) DEFAULT NULL,
+  numberplate varchar(45) DEFAULT NULL,
+  type varchar(45) DEFAULT NULL,
+  color varchar(45) DEFAULT NULL,
+  PRIMARY KEY (bikeID),
+  UNIQUE KEY numberplate_UNIQUE (numberplate)
+)
+              /* ^^^^^^^^^ PROCEDURES ^^^^^^^^^^^^^^^^^^^ */
 
 DELIMITER //
 CREATE PROCEDURE CreateCustomer(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
@@ -80,6 +90,53 @@ BEGIN
     SELECT 'Appointment completed and bill generated successfully';
 END //
 DELIMITER ;
+
+/* Yet to update in database*/
+
+DELIMITER //
+CREATE PROCEDURE GiveRating(IN P_ServiceCenterID INT, IN P_Rating FLOAT)
+BEGIN
+	IF EXISTS (SELECT ServiceCenterID FROM ServiceCenters WHERE ServiceCenterID = P_ServiceCenterID) THEN
+		IF P_Rating=>0 AND P_Rating<=5 THEN
+			UPDATE ServiceCenters SET Rating = P_Rating WHERE ServiceCenterID=P_ServiceCenterID;
+		ELSE
+			SELECT 'INVALID ENTER RATING BETWEEN 1 TO 5';
+		END IF;
+    ELSE
+        SELECT 'INVALID ServiceCenterID !!!!';
+    END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+create procedure checkBill(IN P_CustomerID int)
+
+BEGIN
+	select concat("Your Total bill is: ",b.amount )
+	from bills b, Appointments a 
+	where b.AppointmentID=a.AppointmentID and a.CustomerID=P_CustomerID;
+END //
+DELIMITER ;
+
+
+
+
+
+         /* ^^^^^^^^^^^^^^^^^^ BASIC FUNCTIONS ^^^^^^^^^^^^^^^^^^^ */
+		 
+		 
+
+
+
+
+
+
+
+	
+
+
+
+	
 
 
 
