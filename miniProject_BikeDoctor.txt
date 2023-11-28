@@ -16,12 +16,15 @@ CREATE TABLE ServiceCenters (
 CREATE TABLE Appointments (
     AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT,
+	bikeID INT,
     ServiceCenterID INT,
     AppointmentTime DATETIME NOT NULL,
     Status ENUM('Booked', 'Completed', 'Cancelled') NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
-    FOREIGN KEY (ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID)
+    FOREIGN KEY (ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID),
+	FOREIGN KEY (bikeID) REFERENCES BIKE(bikeID)
+	
 );
 
 CREATE TABLE Bills (
@@ -39,11 +42,47 @@ CREATE TABLE BIKE (
   model varchar(45) DEFAULT NULL,
   numberplate varchar(45) DEFAULT NULL,
   type varchar(45) DEFAULT NULL,
-  color varchar(45) DEFAULT NULL,
   PRIMARY KEY (bikeID),
   UNIQUE KEY numberplate_UNIQUE (numberplate)
-)
+);
+
+
+CREATE TABLE LOGS(
+	LogsID int not null AUTO_INCREMENT,
+	CustomerID INT,
+	ServiceCenterID INT,
+	bikeID INT,
+	BillID INT,
+	Amount DECIMAL(10,2),
+	numberplate varchar(45),
+	Rating FLOAT,
+	FOREIGN KEY(CustomerID) REFERENCES Customers(CustomerID),
+	FOREIGN KEY(ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID),
+	FOREIGN KEY(bikeID) REFERENCES BIKE(bikeID),
+	FOREIGN KEY(BillID) REFERENCES Bills(BillID),
+	PRIMARY KEY(LogsID)
+	);
+	
+	
+	
+	
+	
+	
+	
               /* ^^^^^^^^^ PROCEDURES ^^^^^^^^^^^^^^^^^^^ */
+			  
+DELIMITER //
+CREATE PROCEDURE giveBikeDetails(in b_model varchar(45),in b_numberplate varchar(45), in b_type varchar(45))
+BEGIN
+    IF EXISTS (SELECT * FROM BIKE WHERE numberplate = b_numberplate ) THEN
+        SELECT 'Bike already registered!!';
+    ELSE
+        INSERT INTO BIKE(model,numberplate,type) VALUES(b_model,b_numberplate,b_type);
+        SELECT 'Bike registered successfully :)';
+    END IF;
+END //
+DELIMITER ;
+			  
 
 DELIMITER //
 CREATE PROCEDURE CreateCustomer(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
@@ -123,6 +162,11 @@ DELIMITER ;
 
 
          /* ^^^^^^^^^^^^^^^^^^ BASIC FUNCTIONS ^^^^^^^^^^^^^^^^^^^ */
+		 
+		 /* ^^^^^^^^^^^^^^^^^^ BASIC TRIGGERS ^^^^^^^^^^^^^^^^^^^ */
+		 
+DELIMITER //
+CREATE TRIGGER after_insert AFTER INSERT
 		 
 		 
 
