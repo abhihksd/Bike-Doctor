@@ -1,0 +1,6 @@
+TRUNCATE TABLE appointments;
+TRUNCATE TABLE bike;
+TRUNCATE TABLE bills;
+TRUNCATE TABLE customers;
+TRUNCATE TABLE servicecenters;
+TRUNCATE TABLE rating;
