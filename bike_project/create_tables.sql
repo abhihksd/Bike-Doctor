@@ -27,24 +27,33 @@ CREATE TABLE Appointments (
 	
 );
 
-CREATE TABLE Bills (
-    BillID INT AUTO_INCREMENT PRIMARY KEY,
-    AppointmentID INT,
-    Amount DECIMAL(10, 2) NOT NULL,
-    Paid ENUM('Yes', 'No') DEFAULT 'No',
-    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
-);
 
 
-CREATE TABLE BIKE (
-  bikeID int NOT NULL AUTO_INCREMENT,
-  model varchar(45) DEFAULT NULL,
-  numberplate varchar(45) DEFAULT NULL,
-  type varchar(45) DEFAULT NULL,
-  PRIMARY KEY (bikeID),
-  UNIQUE KEY numberplate_UNIQUE (numberplate)
-);
+CREATE TABLE `bills` (
+  `BillID` int NOT NULL AUTO_INCREMENT,
+  `AppointmentID` int DEFAULT NULL,
+  `Amount` decimal(10,2) NOT NULL,
+  `Paid` enum('Yes','No') DEFAULT 'No',
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`BillID`),
+  KEY `AppointmentID` (`AppointmentID`),
+  CONSTRAINT `bills_ibfk_1` FOREIGN KEY (`AppointmentID`) REFERENCES `appointments` (`AppointmentID`)
+) 
+
+
+CREATE TABLE `bike` (
+  `bikeID` int NOT NULL AUTO_INCREMENT,
+  `model` varchar(45) DEFAULT NULL,
+  `numberplate` varchar(45) DEFAULT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  PRIMARY KEY (`bikeID`),
+  UNIQUE KEY `numberplate_UNIQUE` (`numberplate`),
+  KEY `FK_CustomerID_idx` (`CustomerID`),
+  CONSTRAINT `FK_CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`)
+) 
+
+
 
 
 

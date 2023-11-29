@@ -50,3 +50,28 @@ INSERT INTO Customers (Username, Password) VALUES
     ('rajiv_singh', 'strongpass567848');
 
 
+INSERT INTO servicecenters (Username, Password) VALUES
+    ('tech_hub', 'pass123'),
+    ('repair_masters', 'secure_pass'),
+    ('gadget_gurus', 'strongpass456'),
+    ('quick_fix', 'secret789'),
+    ('smart_service', 'pass789'),
+    ('device_doctors', 'mypassword'),
+    ('tech_support', 'password456'),
+    ('fix_it_fast', 'passcode123'),
+    ('gizmo_genius', 'secure456'),
+    ('express_service', 'strongcode789');
+
+
+
+
+
+
+-- Insert dummy data into bike table
+INSERT INTO bike (model, numberplate, type, CustomerID) VALUES
+    ('Scooty ZR', 'KA01AB1234', 'Scooter', 1),
+    ('Pulsar 150', 'MH02CD5678', 'Motorcycle', 2),
+    ('Activa 6G', 'DL03EF9012', 'Scooter', 3),
+    ('Royal Enfield Classic 350', 'TN04GH3456', 'Cruiser', 4),
+    ('TVS Apache RTR 160', 'UP05IJ6789', 'Street', 5);
+

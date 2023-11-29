@@ -60,20 +60,7 @@ DELIMITER ;
 
 /* Yet to update in database*/
 
-DELIMITER //
-CREATE PROCEDURE GiveRating(IN P_ServiceCenterID INT, IN P_Rating FLOAT)
-BEGIN
-	IF EXISTS (SELECT ServiceCenterID FROM ServiceCenters WHERE ServiceCenterID = P_ServiceCenterID) THEN
-		IF P_Rating >=0 AND P_Rating<=5 THEN
-			UPDATE ServiceCenters SET Rating = P_Rating WHERE ServiceCenterID=P_ServiceCenterID;
-		ELSE
-			SELECT 'INVALID ENTER RATING BETWEEN 1 TO 5';
-		END IF;
-    ELSE
-        SELECT 'INVALID ServiceCenterID !!!!';
-    END IF;
-END //
-DELIMITER ;
+
 
 DELIMITER //
 create procedure checkBill(IN P_CustomerID int)
@@ -98,3 +85,16 @@ BEGIN
         SELECT 'INVALID ServiceCenterID !!!!';
     END IF;
 END
+
+CREATE PROCEDURE `update_appoitment`(in cust_id int,in new_time TIMESTAMP)
+BEGIN
+	update appointments 
+    set appointmentTime= new_time 
+    where customerID= cust_id;
+END
+
+CREATE PROCEDURE `cancel_appointment`(in cust_id int)
+BEGIN
+	update appointments set status='cancelled' where customerid=cust_id;
+END
+
