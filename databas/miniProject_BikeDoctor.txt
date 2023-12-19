@@ -1,0 +1,186 @@
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ServiceCenters (
+    ServiceCenterID INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Rating FLOAT DEFAULT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Appointments (
+    AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+	bikeID INT,
+    ServiceCenterID INT,
+    AppointmentTime DATETIME NOT NULL,
+    Status ENUM('Booked', 'Completed', 'Cancelled') NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID),
+	FOREIGN KEY (bikeID) REFERENCES BIKE(bikeID)
+	
+);
+
+CREATE TABLE Bills (
+    BillID INT AUTO_INCREMENT PRIMARY KEY,
+    AppointmentID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    Paid ENUM('Yes', 'No') DEFAULT 'No',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
+);
+
+
+CREATE TABLE BIKE (
+  bikeID int NOT NULL AUTO_INCREMENT,
+  model varchar(45) DEFAULT NULL,
+  numberplate varchar(45) DEFAULT NULL,
+  type varchar(45) DEFAULT NULL,
+  PRIMARY KEY (bikeID),
+  UNIQUE KEY numberplate_UNIQUE (numberplate)
+);
+
+
+CREATE TABLE LOGS(
+	LogsID int not null AUTO_INCREMENT,
+	CustomerID INT,
+	ServiceCenterID INT,
+	bikeID INT,
+	BillID INT,
+	Amount DECIMAL(10,2),
+	numberplate varchar(45),
+	Rating FLOAT,
+	FOREIGN KEY(CustomerID) REFERENCES Customers(CustomerID),
+	FOREIGN KEY(ServiceCenterID) REFERENCES ServiceCenters(ServiceCenterID),
+	FOREIGN KEY(bikeID) REFERENCES BIKE(bikeID),
+	FOREIGN KEY(BillID) REFERENCES Bills(BillID),
+	PRIMARY KEY(LogsID)
+	);
+	
+	
+	
+	
+	
+	
+	
+              /* ^^^^^^^^^ PROCEDURES ^^^^^^^^^^^^^^^^^^^ */
+			  
+DELIMITER //
+CREATE PROCEDURE giveBikeDetails(in b_model varchar(45),in b_numberplate varchar(45), in b_type varchar(45))
+BEGIN
+    IF EXISTS (SELECT * FROM BIKE WHERE numberplate = b_numberplate ) THEN
+        SELECT 'Bike already registered!!';
+    ELSE
+        INSERT INTO BIKE(model,numberplate,type) VALUES(b_model,b_numberplate,b_type);
+        SELECT 'Bike registered successfully :)';
+    END IF;
+END //
+DELIMITER ;
+			  
+
+DELIMITER //
+CREATE PROCEDURE CreateCustomer(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
+BEGIN
+    IF EXISTS (SELECT * FROM Customers WHERE Username = p_username) THEN
+        SELECT 'Account already created for this username';
+    ELSE
+        INSERT INTO Customers(Username, Password) VALUES(p_username, p_password);
+        SELECT 'Account created successfully for this username';
+    END IF;
+END //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE CreateServiceCenter(IN p_username VARCHAR(50), IN p_password VARCHAR(255))
+BEGIN
+    IF EXISTS (SELECT * FROM ServiceCenters WHERE Username = p_username) THEN
+        SELECT 'Account already created for this username';
+    ELSE
+        INSERT INTO ServiceCenters(Username, Password) VALUES(p_username, p_password);
+        SELECT 'Account created successfully for this username';
+    END IF;
+END //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE PROCEDURE BookAppointment(IN p_customerID INT, IN p_serviceCenterID INT, IN p_appointmentTime DATETIME)
+BEGIN
+    INSERT INTO Appointments(CustomerID, ServiceCenterID, AppointmentTime, Status) VALUES(p_customerID, p_serviceCenterID, p_appointmentTime, 'Booked');
+    SELECT 'Appointment booked successfully';
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE CompleteAppointment(IN p_appointmentID INT, IN p_amount DECIMAL(10, 2))
+BEGIN
+    UPDATE Appointments SET Status = 'Completed' WHERE AppointmentID = p_appointmentID;
+    INSERT INTO Bills(AppointmentID, Amount) VALUES(p_appointmentID, p_amount);
+    SELECT 'Appointment completed and bill generated successfully';
+END //
+DELIMITER ;
+
+/* Yet to update in database*/
+
+DELIMITER //
+CREATE PROCEDURE GiveRating(IN P_ServiceCenterID INT, IN P_Rating FLOAT)
+BEGIN
+	IF EXISTS (SELECT ServiceCenterID FROM ServiceCenters WHERE ServiceCenterID = P_ServiceCenterID) THEN
+		IF P_Rating=>0 AND P_Rating<=5 THEN
+			UPDATE ServiceCenters SET Rating = P_Rating WHERE ServiceCenterID=P_ServiceCenterID;
+		ELSE
+			SELECT 'INVALID ENTER RATING BETWEEN 1 TO 5';
+		END IF;
+    ELSE
+        SELECT 'INVALID ServiceCenterID !!!!';
+    END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+create procedure checkBill(IN P_CustomerID int)
+
+BEGIN
+	select concat("Your Total bill is: ",b.amount )
+	from bills b, Appointments a 
+	where b.AppointmentID=a.AppointmentID and a.CustomerID=P_CustomerID;
+END //
+DELIMITER ;
+
+
+
+
+
+         /* ^^^^^^^^^^^^^^^^^^ BASIC FUNCTIONS ^^^^^^^^^^^^^^^^^^^ */
+		 
+		 /* ^^^^^^^^^^^^^^^^^^ BASIC TRIGGERS ^^^^^^^^^^^^^^^^^^^ */
+		 
+DELIMITER //
+CREATE TRIGGER after_insert AFTER INSERT
+		 
+		 
+
+
+
+
+
+
+
+	
+
+
+
+	
+
+
+
