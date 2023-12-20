@@ -39,6 +39,20 @@ export default function Register() {
                 error="error";
             }
             break;
+            case "email":
+                pattern=/^[\w.#-]{4,20}@[A-Za-z]{4,10}\.[a-z]{2,3}/
+                if(!pattern.test(val)){
+                    valid=false;
+                    error="email error";
+                }
+                break;
+                case "phone":
+                    pattern=/^[897]{1}[0-9]{9}/
+                    if(!pattern.test(val)){
+                        valid=false;
+                        error="can only contain numbers"
+                    }
+                    break;
       default:
         valid = true;
         error = "";
@@ -106,7 +120,7 @@ export default function Register() {
 
           {/* email */}
           <input type="text" name="email" placeholder="enter email"  value={user.email.value} onChange={(e)=>{handleChange("email",e.target.value)}} />
-          <div style={{display:user.email.touched && !user.email.valid?"block":"none"}}></div> <br />
+          <div style={{display:user.email.touched && !user.email.valid?"block":"none" , color:"red",}}>{user.email.error}</div> <br />
 
           {/* phone number */}
           <input type="text" name="phone" placeholder="enter phone number" maxLength={10}  value={user.phone.value} onChange={(e)=>{handleChange("phone",e.target.value)}} />
