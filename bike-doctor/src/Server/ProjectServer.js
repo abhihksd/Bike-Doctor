@@ -33,18 +33,28 @@ app.get("/check", function (req, res) {
 });
 
 app.post("/insertcust", function (req, res) {
-    var name=req.body.name;
-    var email=req.body.email;
-    var phone=req.body.phone;
-    var user = req.body.username;
-    var pass = req.body.password;
-    
-    
-   var query = "call CreateCustomer(?,?,?,?,?)";
-    conn.query(query, [user,pass,name,email,phone], function (err) {
-      if (!err) {
-        res.send("success");
-      } else res.send("failure");
-    });
+  var name = req.body.name;
+  var email = req.body.email;
+  var phone = req.body.phone;
+  var user = req.body.username;
+  var pass = req.body.password;
+
+  var query = "call CreateCustomer(?,?,?,?,?)";
+  conn.query(query, [user, pass, name, email, phone], function (err) {
+    if (!err) {
+      res.send("success");
+    } else res.send("failure");
   });
-  
+});
+
+app.post("/login", function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  var query = `select Username,Password from Customers where Username=${username} and Password=${password}`;
+  conn.query(query, function (err, data) {
+    if (!err) {
+      res.send("success");
+    } else res.send("failure");
+  });
+});
