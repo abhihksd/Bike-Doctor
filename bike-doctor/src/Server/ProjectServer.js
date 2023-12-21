@@ -20,7 +20,7 @@ var conn = mysql.createConnection({
 conn.connect(function (err) {
   if (!err) {
     console.log("database connected");
-  }
+  } else console.log("connection failed");
 });
 
 app.get("/check", function (req, res) {
@@ -51,10 +51,13 @@ app.post("/login", function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  var query = `select Username,Password from Customers where Username=${username} and Password=${password}`;
-  conn.query(query, function (err, data) {
+  var query =
+    "select * from customers where username=? and password=?;";
+  conn.query(query, [username, password], function (err, data) {
     if (!err) {
-      res.send("success");
-    } else res.send("failure");
+      if (data.length > 0 && data[0].Username==username && data[0].Password==password ) {
+        res.send("success");
+      } else res.send("failure");
+    }
   });
 });
