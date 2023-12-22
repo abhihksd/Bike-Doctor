@@ -1,5 +1,5 @@
 import { useReducer, useState } from "react";
-
+import img from "../img/reg.avif"
 export default function Register() {
     const[msg,setMsg]=useState("")
   const init = {
@@ -8,12 +8,13 @@ export default function Register() {
     phone: { value: "", valid: false, touched: false, error: "" },
     username: { value: "", valid: false, touched: false, error: "" },
     password: { value: "", valid: false, touched: false, error: "" },
+    formvalid:false
   };
   const reducer = (state, action) => {
     switch (action.type) {
       case "update":
-        const { key, value, touched, valid, error } = action.data;
-        return { ...state, [key]: { value, touched, valid, error } };
+        const { key, value, touched, valid, error,formValid } = action.data;
+        return { ...state, [key]: { value, touched, valid, error },formValid };
       case "reset":
         return init;
       default:
@@ -47,7 +48,7 @@ export default function Register() {
                 }
                 break;
                 case "phone":
-                    pattern=/^[897]{1}[0-9]{9}/
+                    pattern=/^[0-9]{10}/
                     if(!pattern.test(val)){
                         valid=false;
                         error="can only contain numbers"
@@ -63,10 +64,18 @@ export default function Register() {
   const handleChange = (key, value) => {
     const { valid, error } = validateData(key, value);
     console.log(user.name.valid);
+    let formValid=true
+    for(let k in user){
+      if(user[k].valid===false){
+        formValid=false;
+        break;
+      }
+    }
+    
 
     dispatch({
       type: "update",
-      data: { key, value, touched: true, valid, error },
+      data: { key, value, touched: true, valid, error,formValid },
     });
   };
   const submitData = (e) => {
@@ -90,12 +99,18 @@ export default function Register() {
   
   const [user, dispatch] = useReducer(reducer, init);
   return (
+
     <div className="row">
     <div className="col">
         {/* <p> this is the left side</p> */}
+       
     </div>
     <div className="col" style={{margin:"50px"}}>
       <form action="" className="row">
+      <div className="App">
+      <h1 className="App">Registration</h1> 
+<img  src={img} style={{width:"200px", height:"200px"  }} alt="pic"/>
+</div>
 
         {/* input for name */}
         <input
@@ -103,6 +118,7 @@ export default function Register() {
           name="name"
           placeholder="enter name"
           value={user.name.value}
+          required
           onChange={(e) => {
             handleChange("name", e.target.value);
           }}
@@ -139,12 +155,12 @@ export default function Register() {
          <div style={{display:user.password.touched && !user.password.valid? "block":"none"}}>{user.password.error}</div>
         {/* submit button */}
         <br />
-        <input type="submit" value="submit" className="btn btn-primary" onClick={(e)=>{submitData(e)}}/>
+        <input type="submit" value="submit" className="btn btn-primary" disabled={!user.formValid}    onClick={(e)=>{submitData(e)}}/>
         {/* Reset button */}
         <input type="reset" className="btn btn-danger" value="reset"/>
       </form>
-          <div><p>{msg}</p></div>
-          <div><p>{JSON.stringify(user)}</p></div>
+          {/* <div><p>{msg}</p></div> */}
+          {/* <div><p>{JSON.stringify(user)}</p></div> */}
     </div>
     <div className="col">
         {/* <p>This is the riht side</p> */}
