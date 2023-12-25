@@ -1,0 +1,50 @@
+/* .form-div{
+margin: auto;
+width: 50%;
+border: 3px solid black;
+padding: 10%;
+
+} */
+/* LoginForm.css */
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      
+    }
+  }
+  
+  .login-form {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-message {
+    margin-top: 10px;
+    color: #dc3545;
+    font-weight: bold;
+  }
+  
+  /* Add responsive styles as needed */
+
+button{
+  display: flex;
+  justify-content: space-between;
+}
+.image-container {
+  /* Your existing styles for the image container */
+  margin:0%;
+
+  @media (max-width: 768px) {
+    /* Add responsive styles for smaller screens */
+    
+  }
+}

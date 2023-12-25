@@ -1,0 +1,22 @@
+.App-header2 {
+    background-color: #282c34;
+    min-height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: right;
+    text-align: left;
+    justify-content: right;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  .App-logo2{
+    /* height: 8vmin;
+  pointer-events: none;
+  text-align: left;
+  align-items: left;
+  justify-content: left; */
+  width: 40px; /* Adjust the width as needed */
+  /* margin-right: 10px; */
+  }
+
+  
