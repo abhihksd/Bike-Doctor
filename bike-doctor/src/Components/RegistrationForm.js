@@ -41,7 +41,7 @@ export default function Register() {
         }
         break;
        case "username":
-            pattern=/^[a-zA-z._-]{6,15}$/
+            pattern=/^[a-zA-Z0-9._-]{6,15}$/
             if(!pattern.test(val)){
                 valid=false;
                 error="error";
@@ -101,12 +101,14 @@ export default function Register() {
     }
     fetch("http://localhost:9000/insertcust",reqOption)
     .then(resp=>resp.text())
-    .then((data)=>{setMsg(data);
+    .then((data)=>{setMsg(data)
       if({msg}=="success")
       {
         nav("/login");
       }
       })
+      window.alert(msg)
+      nav("/login")
   };
 
   
@@ -277,8 +279,9 @@ export default function Register() {
 
       {/* Submit and Reset buttons */}
       <Button variant="primary" type="submit" disabled={!user.formValid}   onClick={(e) => submitData(e)}>Submit</Button>
-      <Button variant="danger" type="reset">Reset</Button>
+      <Button variant="danger" type="reset" >Reset</Button>
       <p style={{color:msg=="success"?"green":"red"}}  >{msg}</p>
+      
     </Form>
   </div>
 
