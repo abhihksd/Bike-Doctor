@@ -9,7 +9,7 @@ import img from "../img/img3.avif"
 export default function LoginForm() {
 
 const dispatch=useDispatch()
-const mystate=useSelector((state)=>state.logged)
+// const mystate=useSelector((state)=>state.logged)
 
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
@@ -26,20 +26,8 @@ const mystate=useSelector((state)=>state.logged)
         password: pass,
       }),
     };
+   
     console.log(user + "" + pass);
-    // fetch("http://localhost:9000/login", reqOption)
-    //   .then((resp) => resp.text())
-    // //   .then((data) => setMsg(data))
-      
-    // //   .then(()=> {
-    // //     if (msg == "success") nav("/home");
-    // //   })
-    //   .then((data)=>{
-    //     setMsg(data)
-    //     if(msg=="success") {
-    //         dispatch(login())
-    //         nav("/home")}
-    // })
     fetch("http://localhost:9000/login", reqOption)
       .then((resp) => resp.text())
       .then((data) => {
@@ -75,7 +63,7 @@ const mystate=useSelector((state)=>state.logged)
 
         <Form.Group controlId="formPassword" className="mb-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control
+          <Form.Control required
             type="password"
             placeholder="Enter Password"
             value={pass}
@@ -87,7 +75,7 @@ const mystate=useSelector((state)=>state.logged)
           Login
         </Button>
 
-        <Button variant="primary" type="button" onClick={resetForm} className="mb-3 btn-danger">
+        <Button variant="primary" type="button" onClick={resetForm}  className="mb-3 btn-danger">
           Reset
         </Button>
         <p className="login-message">{msg}</p>

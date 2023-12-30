@@ -27,6 +27,9 @@ export default function Register() {
         return init;
     }
   };
+  const handleReset = () => {
+    dispatch({ type: "reset" });
+  };
 
   const validateData = (key, val) => {
     let valid = true;
@@ -34,21 +37,21 @@ export default function Register() {
     switch (key) {
       case "name":
         // var pattern = /^[a-zA-Z\s]{1,20}$/;
-        var pattern =/^[A-Z]{1}[a-z]{1,} [A-Z]{1}[a-z]{1,}$/
+        var pattern =/^[A-Z]{1}[a-z]{1,} [A-Z]{1}[a-z]{1,}$/   //First Alphabet of First and Last NAME should be capital  
         if (!pattern.test(val)) {
           valid = false;
           error = "only alphabet allowed";
         }
         break;
        case "username":
-            pattern=/^[a-zA-Z0-9._-]{6,15}$/
+            pattern=/^[a-zA-Z0-9._-]{6,15}$/   //range from 6 to 15 
             if(!pattern.test(val)){
                 valid=false;
                 error="error";
             }
             break;
             case "email":
-                pattern=/^[\w.#-]{4,20}@[A-Za-z]{4,10}\.[a-z]{2,3}/
+                pattern=/^[\w.#-]{4,20}@[A-Za-z]{4,10}\.[a-z]{2,3}/  //
                 if(!pattern.test(val)){
                     valid=false;
                     error="email error";
@@ -61,6 +64,13 @@ export default function Register() {
                         error="can only contain numbers"
                     }
                     break;
+                    case "password":
+                      pattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+                      if(!pattern.test(val)){
+                        valid=false; 
+                        error="pass needs a lower upper and uppercase and digit "
+                      }
+                      break;
       default:
         valid = true;
         error = "";
@@ -99,102 +109,72 @@ export default function Register() {
 
         })
     }
-    fetch("http://localhost:9000/insertcust",reqOption)
-    .then(resp=>resp.text())
-    .then((data)=>{setMsg(data)
-      if({msg}=="success")
-      {
-        nav("/login");
-      }
-      })
-      window.alert(msg)
-      nav("/login")
+    // fetch("http://localhost:9000/insertcust",reqOption)
+    // .then(resp=>resp.text())
+    // .then((data)=>{setMsg(data)
+    //   if({msg}=="success")
+    //   {
+    //     nav("/login");
+    //   }
+    //   })
+    //   window.alert(msg)
+    //   if({msg}=="success")
+    //   {
+    //     nav("/login");
+    //   }
+    fetch("http://localhost:9000/insertcust", reqOption)
+  .then((resp) => resp.text())
+  .then((data) => {
+    setMsg(data);
+    if (data === "success") { // Check the updated value of data
+      alert("success");
+      nav("/login");
+    }
+  });
+    
   };
+  const checkusername=()=>{
+    const reqOption={
+      method: "POST",
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+          username:user.username.value,
+      })
+  }
 
+    fetch("http://localhost:9000/check",reqOption)
+    .then(res=>res.text())
+    .then(data=>{
+      setCheck(data)
+      console.log(data)
+      if(data=="Invalid")
+      user.username.valid=false
+    if(data=="Valid")
+    user.username.valid=true
+    })
+
+  }
   
+  const[check,setCheck]=useState(" ") 
   const [user, dispatch] = useReducer(reducer, init);
+  console.log(user);
+
+
   return (
-    // <div>    // <div className="row">
-      
-    // <div className="col">
-    //     {/* <p> this is the left side</p> */}
-       
-    // </div>
-    
-    // <div className="col" /*style={{margin:"50px"}}*/>
-    
-    //   <form action="" className="login-form">
-    //   <Image src={img} style={{width:"200px", height:"200px", textAlign:"center", margin:"0 auto"}} ></Image>
-    //     {/* input for name */}
-    //     <h3 style={{textAlign:"center"}} >Register</h3>
-        
-    //     <input
-    //       type="text"
-    //       name="name"
-    //       placeholder="enter name"
-    //       value={user.name.value}
-    //       onChange={(e) => {
-    //         handleChange("name", e.target.value);
-    //       }}
-    //     />{" "}
-    //     <br />
-
-    //     {/* error message for name */}
-    //     <div
-    //       style={{
-    //         display: user.name.touched && !user.name.valid ? "block" : "none", color:"red",
-    //       }}
-    //     >
-    //       {user.name.error}
-    //     </div>
-
-    //       {/* email */}
-    //       <input type="text" name="email" placeholder="enter email"  value={user.email.value} onChange={(e)=>{handleChange("email",e.target.value)}} />
-    //       <div style={{display:user.email.touched && !user.email.valid?"block":"none" , color:"red",}}>{user.email.error}</div> <br />
-
-    //       {/* phone number */}
-    //       <input type="text" name="phone" placeholder="enter phone number" maxLength={10}  value={user.phone.value} onChange={(e)=>{handleChange("phone",e.target.value)}} />
-    //       <div style={{display:user.phone.touched && !user.phone.valid?"block":"none"}}></div> <br />
-
-    //       {/* input for username */}
-    //       <input type="text" name="username" placeholder="enter username" value={user.username.value} onChange={(e) => {handleChange("username", e.target.value);}}
-    //     />{" "}
-        
-    //     {/* error message for username */}
-    //     <div style={{display: user.username.touched && !user.username.valid ? "block" : "none",}}>{user.username.error}</div><br />
-
-    //      {/* input for password */}
-    //      <input type="text" name="password" placeholder="enter password" onChange={(e)=>{handleChange("password",e.target.value)}}  />
-         
-    //      <div style={{display:user.password.touched && !user.password.valid? "block":"none"}}>{user.password.error}</div>
-    //     {/* submit button */}
-    //     <br />
-    //     <input type="submit" value="submit" className="btn btn-primary" onClick={(e)=>{submitData(e)}}/>
-    //     {/* Reset button */}
-    //     <input type="reset" className="btn btn-danger" value="reset"/>
-    //   </form>
-    //       {/* <div><p>{msg}</p></div>
-    //       <div><p>{JSON.stringify(user)}</p></div> */}
-    // </div>
-    // <div className="col">
-    //     {/* <p>This is the riht side</p> */}
-    // </div>
-    // </div>
-    // </div>
-
-    <div className="row">
-      
+    <div className="row"> 
+     
   <div className="col">
-    {/* Left side content */}
+    
     <Image src={img} style={{ width: "500px", height: "500px", margin: "0 auto" }} alt="Logo" />
   </div>
+  
 
-  <div className="col">
-    <Form className="login-form">
+  <div className="col" style={{marginTop:"50px"}} >
+    <Form className="login-form"  onReset={handleReset} >
     <FormLabel ><h1 style={{textAlign:"center"}}>Register</h1></FormLabel>
       {/* Input for name */}
       <FormGroup>
-        <FormLabel>Name</FormLabel>
+        <FormLabel>Full Name</FormLabel>
         <input
           type="text"
           name="name"
@@ -255,10 +235,14 @@ export default function Register() {
           onChange={(e) => {
             handleChange("username", e.target.value);
           }}
+          onBlur={()=>{
+            checkusername()
+          }}
           className={`form-control ${user.username.touched && !user.username.valid ? 'is-invalid' : ''}`}
         />
         {/* Error message for username */}
         <div className="invalid-feedback">{user.username.error}</div>
+        <div className="check-div" style={{display:user.username.touched?'block':'none'}} >{check}</div>
       </FormGroup>
 
       {/* Input for password */}
@@ -286,9 +270,7 @@ export default function Register() {
   </div>
 
   <div className="col">
-    {/* Right side content */
-    }
-    
+  
   </div>
 </div>
   );

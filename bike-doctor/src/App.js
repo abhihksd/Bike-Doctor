@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import LogoutComp from "./LogoutComp";
 import UpdatePass from "./Components/UpdatePass";
 import OrderHis from "./Components/OrderHistory";
+import Welcome from "./Components/Welcome";
 
 function App() {
   const mystate=useSelector(state=>state.logged)
@@ -26,6 +27,7 @@ function App() {
     </header>
     <div>
       <Routes>
+        <Route path="/" element={<Welcome/>} ></Route>
         <Route path="/home" element={<Home/>}>
           <Route path="logout" element={<LogoutComp/>}></Route>
           <Route path="update" element={<UpdatePass/>}></Route>
@@ -38,7 +40,9 @@ function App() {
         
         
       </Routes>
+     
     </div>
+    
    </div>
   );
 }

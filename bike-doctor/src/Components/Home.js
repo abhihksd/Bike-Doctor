@@ -2,7 +2,6 @@ import { Link, Outlet, Routes,Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import bike from "../img/logo.png"
 import "../CSS/Home.css"
-import OrderHis from "./OrderHistory";
 export default function Home(){
     const mystate=useSelector((state)=>state.logged);
     return (

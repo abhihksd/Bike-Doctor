@@ -23,11 +23,14 @@ conn.connect(function (err) {
   }
 });
 
-app.get("/check", function (req, res) {
-  var query = "select * from customers";
-  conn.query(query, function (err, data) {
+app.post("/check", function (req, res) {
+  var username = req.body.username;
+  var query = "select Username from customers where Username=?";
+  conn.query(query, [username], function (err, data) {
     if (!err) {
-      res.json(data);
+      if (data.length > 0 && data[0].Username == username) {
+        res.send("Invalid");
+      } else res.send("Valid");
     }
   });
 });
@@ -50,11 +53,14 @@ app.post("/login", function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  var query =
-    "select * from customers where username=? and password=?;";
+  var query = "select * from customers where username=? and password=?;";
   conn.query(query, [username, password], function (err, data) {
     if (!err) {
-      if (data.length > 0 && data[0].Username==username && data[0].Password==password ) {
+      if (
+        data.length > 0 &&
+        data[0].Username == username &&
+        data[0].Password == password
+      ) {
         res.send("success");
       } else res.send("failure");
     }
@@ -73,4 +79,5 @@ app.put("/update", function (req, res) {
       res.send("updated");
     } else res.send("failed");
   });
+  // }
 });

@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "../CSS/UpdateForm.css";
 export default function UpdatePass(){
-    const [msg,setMsg]=useState("")
-    const[user,setUser]=useState("") 
-    const[oldpass,setOldPass]=useState("") 
-    const[newpass,setNewPass]=useState("") 
+    const [msg,setMsg]=useState("")     //updated 
+    const[user,setUser]=useState("")   //state for username
+    const[oldpass,setOldPass]=useState("")  //old password
+    const[newpass,setNewPass]=useState("")  //new password
     const nav=useNavigate()
     const udpateFun=(e)=>{
         e.preventDefault()
@@ -13,7 +13,8 @@ export default function UpdatePass(){
             method:"PUT",
             headers:{"content-type":"application/json"},
             body:JSON.stringify({
-                username:user,
+                // username:user,
+                username:localStorage.getItem("user"),
                 oldpassword:oldpass,
                 newpassword:newpass
             })
@@ -22,8 +23,8 @@ export default function UpdatePass(){
         .then((resp)=>resp.text())
         .then((data)=>{setMsg(data)})
     }
-    if(msg=="updated")
-    nav("/login")
+    // if(msg=="updated")
+    // nav("/login")
 
     const handleReset = () => {
         setUser('');
@@ -34,14 +35,7 @@ export default function UpdatePass(){
 
     return (
         <div>
-            {/* <form action="">
-                <input type="text" placeholder="enter username" />
-                <input type="text" placeholder="enter old password" />
-                <input type="text" placeholder="enter new password" />
-                <input type="button" value="Update" />
-                <input type="reset" value="Reset" />
-            </form>
-            <p>{msg}</p> */}
+            
              <div className="update-password-form">
       <form onSubmit={UpdatePass}>
         <div className="mb-3">
@@ -53,7 +47,8 @@ export default function UpdatePass(){
             id="username"
             className="form-control"
             placeholder="Enter username"
-            value={user}
+            // value={user}
+            value={localStorage.getItem("user")}
             onChange={(e) => setUser(e.target.value)}
             required
           />
